@@ -13,12 +13,12 @@ This project demonstrates a basic lottery use case implemented with Solidity.
 ## OPTIONAL features
 
 - [x] A mechanism that allows an external app to live display the status of the lottery (by pushing events for instance)
-- [] Anything you want if it does not take too much of your time
+- [ ] Anything you want if it does not take too much of your time
 
 ## Upgrades
 
-- [] Better randomness using [Chainlink VRF](https://docs.chain.link/vrf/v2/subscription/examples/get-a-random-number)
-- [] Allow users to buy multiple tickets at the same time
+- [ ] Better randomness using [Chainlink VRF](https://docs.chain.link/vrf/v2/subscription/examples/get-a-random-number)
+- [ ] Allow users to buy multiple tickets at the same time
 
 ## How to use
 
