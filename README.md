@@ -1,6 +1,6 @@
 # Solidity Lottery
 
-This project demonstrates a basic lottery use case implemented with Solidity.
+This project demonstrates a basic lottery use case implemented with Solidity. Now with **foundry** ✅
 
 ## Features
 
@@ -9,11 +9,7 @@ This project demonstrates a basic lottery use case implemented with Solidity.
 - [x] The contract should prevent users from buying more tickets than the maximum allowed.
 - [x] The contract should prevent users from buying tickets after the lottery has closed.
 - [x] The contract should allow the contract owner to set the maximum number of tickets allowed and the prize amount.
-
-## OPTIONAL features
-
 - [x] A mechanism that allows an external app to live display the status of the lottery (by pushing events for instance)
-- [ ] Anything you want if it does not take too much of your time
 
 ## Upgrades
 

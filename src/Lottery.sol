@@ -10,6 +10,14 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 //* @notice This contract is not meant to be used in production
 contract Lottery is Ownable {
 
+    function fallback() payable {
+        buyTicket();
+    }
+
+    function receive() payable{
+        buyTicket();
+    }
+
     enum LotteryState {
         Initialized,
         Started,
@@ -31,7 +39,7 @@ contract Lottery is Ownable {
     event TicketBought(address buyer, uint256 ticketPrice);
 
     modifier costs(uint256 amount) {
-        require(msg.value / 1 ether == amount, "Lottery: invalid ticket price");
+        require(msg.value == amount, "Lottery: invalid ticket price");
         _;
     }
 
@@ -145,6 +153,5 @@ contract Lottery is Ownable {
     function stakes() public view returns (uint256) {
         return _ticketsSold * _ticketPrice;
     }
-
 
 }
