@@ -5,7 +5,7 @@ pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 //* @title Lottery
-//* @author Thomas Lenoir
+//* @author GRK
 //* @dev This contract is a simple implementation of a lottery game
 //* @notice This contract is not meant to be used in production
 contract Lottery is Ownable {
