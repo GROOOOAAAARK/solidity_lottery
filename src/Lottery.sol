@@ -10,11 +10,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 //* @notice This contract is not meant to be used in production
 contract Lottery is Ownable {
 
-    function fallback() payable {
+    fallback() payable external {
         buyTicket();
     }
 
-    function receive() payable{
+    receive() payable external {
         buyTicket();
     }
 
@@ -82,7 +82,7 @@ contract Lottery is Ownable {
     }
 
     //* @dev Buy a ticket. You must send the exact ticket price to the contract
-    function buyTicket() external payable isLotteryOngoing costs(_ticketPrice) {
+    function buyTicket() public payable isLotteryOngoing costs(_ticketPrice) {
         _participants.push(msg.sender);
         _ticketsSold++;
 
