@@ -77,6 +77,8 @@ contract Lottery is Ownable {
         uint256 newMaxTicketCount
     ) external onlyOwner {
         require(_lotteryState == State.Ended, "Lottery: not ended");
+        require(newTicketPrice > 0, "Lottery: invalid ticket price");
+        require(newMaxTicketCount > 1, "Lottery: invalid ticket count");
         _ticketPrice = newTicketPrice;
         _maxTicketCount = newMaxTicketCount;
         _ticketsSold = 0;
@@ -123,7 +125,7 @@ contract Lottery is Ownable {
     }
 
     //* @dev Get the current state of the lottery
-    function state() external view returns (LotteryState) {
+    function state() external view returns (State) {
         return _lotteryState;
     }
 
