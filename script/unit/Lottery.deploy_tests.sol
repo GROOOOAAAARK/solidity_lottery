@@ -15,26 +15,30 @@ contract LotteryDeployLocal is Script {
 
         vm.startBroadcast();
 
-        _lotteryAddress = _deploy(_ticketPrice, _maxTicketCount);
+        _lotteryAddress = _deploy(_ticketPrice, _maxTicketCount, address(this));
 
         console.log("Lottery deployed at %s with %s tickets priced %s Wei each", _lotteryAddress, _maxTicketCount, _ticketPrice);
+
+        vm.stopBroadcast();
     }
 
-    function _deploy(uint256 ticketPrice, uint256 maxTicketCount) public returns (address payable lotteryAddress) {
+    function _deploy(uint256 ticketPrice, uint256 maxTicketCount, address owner) public returns (address payable lotteryAddress) {
         Lottery lotteryContract = new Lottery(ticketPrice, maxTicketCount);
 
         lotteryAddress = payable(address(lotteryContract));
+
+        lotteryContract.transferOwnership(owner);
     }
 
     //@ dev Checks that contract parameters are set correctly
-    function testParametersAreSet() public {
+    function testParametersAreSet() public view {
         Lottery lotteryContract = Lottery(_lotteryAddress);
         assert(lotteryContract.ticketPrice() == _ticketPrice);
         assert(lotteryContract.maxTicketCount() == _maxTicketCount);
     }
 
     //@ dev Checks that the contract is in the correct state
-    function testContractIsInCorrectState() public {
+    function testContractIsInCorrectState() public view {
         Lottery lotteryContract = Lottery(_lotteryAddress);
         assert(lotteryContract.state() == Lottery.State.Initialized);
     }
