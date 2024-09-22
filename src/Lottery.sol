@@ -18,7 +18,7 @@ contract Lottery is Ownable {
         buyTicket();
     }
 
-    enum LotteryState {
+    enum State {
         Initialized,
         Started,
         Ended
@@ -30,7 +30,7 @@ contract Lottery is Ownable {
 
     address[] private _participants;
 
-    LotteryState private _lotteryState;
+    State private _lotteryState;
 
     event LotteryStarted(uint256 ticketPrice, uint256 ticketCount);
 
@@ -44,27 +44,30 @@ contract Lottery is Ownable {
     }
 
     modifier isLotteryInitialized() {
-        require(_lotteryState == LotteryState.Initialized, "Lottery: already started or ended");
+        require(_lotteryState == State.Initialized, "Lottery: already started or ended");
         _;
     }
 
     modifier isLotteryOngoing() {
-        require(_lotteryState == LotteryState.Started, "Lottery: not started or ended");
+        require(_lotteryState == State.Started, "Lottery: not started or ended");
         _;
     }
 
     constructor(
-        uint256 price,
+        uint256 weiPrice,
         uint256 ticketCount
     ) Ownable() {
-        _ticketPrice = price;
+        require(weiPrice > 0, "Lottery: invalid ticket price");
+        require(ticketCount > 0, "Lottery: invalid ticket count");
+
+        _ticketPrice = weiPrice;
         _maxTicketCount = ticketCount;
-        _lotteryState = LotteryState.Initialized;
+        _lotteryState = State.Initialized;
     }
 
     //* @dev Start the lottery. Use this function to start the lottery after the initialization
     function startLottery() external isLotteryInitialized onlyOwner {
-        _lotteryState = LotteryState.Started;
+        _lotteryState = State.Started;
         emit LotteryStarted(_ticketPrice, _maxTicketCount);
     }
 
@@ -73,12 +76,12 @@ contract Lottery is Ownable {
         uint256 newTicketPrice,
         uint256 newMaxTicketCount
     ) external onlyOwner {
-        require(_lotteryState == LotteryState.Ended, "Lottery: not ended");
+        require(_lotteryState == State.Ended, "Lottery: not ended");
         _ticketPrice = newTicketPrice;
         _maxTicketCount = newMaxTicketCount;
         _ticketsSold = 0;
         _participants = new address[](0);
-        _lotteryState = LotteryState.Initialized;
+        _lotteryState = State.Initialized;
     }
 
     //* @dev Buy a ticket. You must send the exact ticket price to the contract
@@ -95,9 +98,9 @@ contract Lottery is Ownable {
 
     //* @dev End the lottery and transfer the funds to the winner
     function _endLottery() private {
-        require(_lotteryState == LotteryState.Started, "Lottery: not started");
+        require(_lotteryState == State.Started, "Lottery: not started");
         require(_ticketsSold == _maxTicketCount, "Lottery: not enough tickets sold");
-        _lotteryState = LotteryState.Ended;
+        _lotteryState = State.Ended;
         address winner = _getRandomWinner();
         payable(winner).transfer(address(this).balance);
         emit LotteryEnded(winner);
