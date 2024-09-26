@@ -25,6 +25,9 @@ contract LotteryUnitTestsLocal is Script {
         uint256 userPvK = vm.deriveKey(mnemonic, 1);
         _user = vm.addr(userPvK);
 
+        vm.deal(_owner, 1000);
+        vm.deal(_user, 1000);
+
         console.log("Owner: %s (default active user) --- User: %s\n\n", _owner, _user);
     }
 
@@ -73,4 +76,24 @@ contract LotteryUnitTestsLocal is Script {
         vm.stopPrank();
     }
 
+    /* @dev buyTicket
+        - [ ] Test ok
+        - [ ] Test not enought msg value
+        - [ ] Test for endLottery and get random winner
+        - [ ] Te
+    */
+    function testBuyTicket() public {
+
+        vm.prank(_owner);
+        lotteryContract.startLottery();
+        vm.stopPrank();
+
+        // Test buy function OK
+        vm.startPrank(_user);
+        lotteryContract.buyTicket{value: lotteryContract.ticketPrice()}();
+        assert(lotteryContract.ticketsSold() == 1);
+        assert(lotteryContract.ticketsLeft() == lotteryContract.maxTicketCount() - 1);
+        assert(address(lotteryContract).balance == lotteryContract.ticketPrice() * 1);
+
+    }
 }
