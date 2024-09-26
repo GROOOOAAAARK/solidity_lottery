@@ -3,7 +3,7 @@ pragma solidity ^0.8.13;
 
 import { Script, console } from "forge-std/Script.sol";
 import { Lottery } from "@contracts/Lottery.sol";
-import { LotteryDeployLocal } from "./Lottery.deploy_tests.sol";
+import { LotteryDeployLocal } from "@tests/unit/Lottery.deploy_tests.t.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract LotteryUnitTestsLocal is Script {
@@ -19,8 +19,7 @@ contract LotteryUnitTestsLocal is Script {
         vm.prank(_owner);
 
         LotteryDeployLocal deployer = new LotteryDeployLocal();
-        // vm.broadcast(_owner);
-        address payable lotteryAddress = deployer._deploy(10, 5, _owner);
+        address payable lotteryAddress = deployer._deploy(10, 3, _owner);
         lotteryContract = Lottery(lotteryAddress);
 
         uint256 userPvK = vm.deriveKey(mnemonic, 1);
@@ -29,6 +28,7 @@ contract LotteryUnitTestsLocal is Script {
         console.log("Owner: %s (default active user) --- User: %s\n\n", _owner, _user);
     }
 
+    // @dev Start Lottery conditions
     function testStartLottery() public {
         // Test nobody can start the lottery except the owner
         vm.prank(_user);
@@ -37,8 +37,9 @@ contract LotteryUnitTestsLocal is Script {
         vm.stopPrank();
 
         // Test the owner can start the lottery
+        vm.expectEmit(true, true, true, true);
+        emit Lottery.LotteryStarted(lotteryContract.ticketPrice(), lotteryContract.maxTicketCount());
         vm.prank(_owner);
-        // vm.expectEmit(true, true, false, true);
         lotteryContract.startLottery();
 
         // Test the owner cannot start the lottery if already started
@@ -47,12 +48,29 @@ contract LotteryUnitTestsLocal is Script {
         vm.stopPrank();
     }
 
+    // @dev Reset Lottery conditions
     function testReset() public {
         uint256 newTicketPrice = 10;
         uint256 newMaxTicketCount = 10;
 
+        // Invalid user permissions
         vm.prank(_user);
         vm.expectRevert("Ownable: caller is not the owner");
         lotteryContract.resetLottery(newTicketPrice, newMaxTicketCount);
+        vm.stopPrank();
+
+        // Invalid lottery state
+        vm.prank(_owner);
+        vm.expectRevert("Lottery: not ended");
+        lotteryContract.resetLottery(newTicketPrice, newMaxTicketCount);
+
+        // // Valid state and permissions: check state, new price and ticket count
+        // vm.setArbitraryStorage(payable(address(lotteryContract)));
+        // lotteryContract._lotteryState = lotteryContract.State.Ended;
+        // lotteryContract.resetLottery(newTicketPrice, newMaxTicketCount);
+        // assert(lotteryContract._ticketPrice == newTicketPrice);
+        // assert(lotteryContract._maxTicketCount == newMaxTicketCount);
+        vm.stopPrank();
     }
+
 }

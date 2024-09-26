@@ -10,6 +10,7 @@ remappings = [
     "@interfaces/=src/interfaces/",
     "@abstracts/=src/abstracts/",
     "@chainlink/contracts/=lib/chainlink-brownie-contracts/contracts",
+    "@tests/=test/"
 ]
 gas_reports = ['Lottery']
 
