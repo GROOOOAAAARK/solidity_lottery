@@ -15,6 +15,7 @@ This project demonstrates a basic lottery use case implemented with Solidity. No
 
 - [ ] Better randomness using [Chainlink VRF](https://docs.chain.link/vrf/v2/subscription/examples/get-a-random-number)
 - [ ] Allow users to buy multiple tickets at the same time
+- [ ] fallback / receive functions
 
 ## How to use
 
