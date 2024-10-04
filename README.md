@@ -23,3 +23,14 @@ This project demonstrates a basic lottery use case implemented with Solidity. No
 - Each ticket can be bought separately by using the `buyTicket` function. It will transfer the price of the ticket to the contract and emit an event.
 - Once the last ticket is bought, the lottery is labeled as `Ended` and the winner is automatically picked. The total pool prize is then transferred to the winner.
 - The owner can call the `resetLottery` function to reset the lottery and start a new one using the same contract, using a new ticket price and a new max number of tickets.
+
+## Local tests (Foundry)
+
+### Deployment
+
+1. Source the env file with the needed vars
+2. Run `anvil` to start the local blockchain environment
+3. Create a `deployer` account with `cast wallet import deployer --interactive` and file in the private key of an already funded account.
+4. Run `forge create ./src/Lottery.sol:Lottery --rpc-url $RPC_URL --account deployer --constructor-args $WEI_TICKET_PRICE --constructor-args $MAX_TICKET_NB`
+
+The contract is now deployed ! 🚀
