@@ -39,7 +39,7 @@ contract Lottery is Ownable {
     event TicketBought(address buyer, uint256 ticketPrice);
 
     modifier costs(uint256 amount) {
-        require(msg.value == amount, "Lottery: invalid ticket price");
+        require(msg.value * 1e18 == amount, "Lottery: invalid ticket price");
         _;
     }
 
@@ -60,7 +60,7 @@ contract Lottery is Ownable {
         require(weiPrice > 0, "Lottery: invalid ticket price");
         require(ticketCount > 0, "Lottery: invalid ticket count");
 
-        _ticketPrice = weiPrice;
+        _ticketPrice = weiPrice * 1e18;
         _maxTicketCount = ticketCount;
         _lotteryState = State.Initialized;
     }
