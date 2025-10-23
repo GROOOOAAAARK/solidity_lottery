@@ -3,6 +3,10 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+// import "./interfaces/ILottery.sol";
+// import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+
+// TODO: use SafeMath for uint256;
 
 //* @title Lottery
 //* @author GRK
